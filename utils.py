@@ -20,6 +20,18 @@ FP = [ 39,  7, 47, 15, 55, 23, 63, 31,
      32,  0, 40,  8, 48, 16, 56, 24
      ]
 
+PC1 = [ 56, 48, 40, 32, 24, 16, 8,
+      0, 57, 49, 41, 33, 25, 17,
+      9, 1, 58, 50, 42, 34, 26,
+      18, 10, 2, 59, 51, 43, 35,
+      62, 54, 46, 38, 30, 22, 14,
+      6, 61, 53, 45, 37, 29, 21,
+      13, 5, 60, 52, 44, 36, 28,
+      20, 12, 4, 27, 19, 11, 3
+    ]
+
+ROTATION_SCHEDULE = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
+
 CORE_KEY = bin(random.getrandbits(56)[2:])
 
 PARITY = 0 if CORE_KEY.count('1') % 2 == 0 else 1
@@ -28,23 +40,20 @@ KEY = CORE_KEY + PARITY
 
 def gen_subkeys():
   subkeys = []
-  
-  left = CORE_KEY[0:(len(CORE_KEY)/2)]
-  right = CORE_KEY[(len(CORE_KEY)/2) len(CORE_KEY)]
-
-# The two 28-bit quantities are then subjected to successive circular left shifts 
-# of different sizes before the subkey for each round is determined from them. 
-# These circular left shifts, one of which is applied before the first subkey is taken, 
-# are in order of the following sizes:
-
-#  1 1 2 2 2 2 2 2 1 2 2 2 2 2 2 1
+  left = KEY[0:(len(CORE_KEY)/2)]
+  right = KEY[(len(CORE_KEY)/2) len(CORE_KEY)]
 
   for i in range(16):
-    subkeys[i] = lshift(left) + lshift(right)
+    rotation = ROTATION_SCHEDULE[i]
+    subkeys[i] = lshift(left, rotation) + lshift(right, rotation)
+  return subkeys
 
-def lshift(block):
-  last = block.pop()
-  block.insert(0, last)
+def lshift(block, rotation=1):
+  for i in range(rotation):
+    last = block.pop()
+    block.insert(0, last)
+  return permutate(block, PC1)
   
-
+def permutate(block, interface):
+  return list(map(lambda x: block[x], interface))
 
