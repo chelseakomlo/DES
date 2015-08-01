@@ -1,11 +1,8 @@
+import random
 
-# initial permutation IP
+# Initial Permutation (IP)
 # The Initial Permuation (IP) is a description of how a byte wide interface is connected 
 # to a 64 bit block comprised of two 32 bit blocks (L and R). 
-# Consider a byte wide interface with the bits numbered 1-8. 
-# The event numbered bits go to the L Block and the odd numbered bits go to the R block. 
-# Note that the bit order is big endian, where bit 1 is most significant and bit 8 is least 
-# significant. The input block is typically loaded as 8 successive byte loads
 
 IP = [ 57, 49, 41, 33, 25, 17, 9, 1,
       59, 51, 43, 35, 27, 19, 11, 3,
@@ -27,26 +24,21 @@ FP = [ 39,  7, 47, 15, 55, 23, 63, 31,
      32,  0, 40,  8, 48, 16, 56, 24
      ]
 
-KEY = "12345" 
-# 1. How to choose a key? 
-
-# The key is and must be picked at random. You grab a bunch of bits from wherever, and hope that they are random enough to resist 
-# attacks on the key generation algorithm.
-
-# DES is a symmetric encryption algorithm, which means that to decrypt the data you must have the same key that was used to encrypt it. 
-
-
-# 2. What is the proper key for this? 
-
-# At the simplest level, the key is generated from a hashed version of a password. The key (ie the specific series of bits) must 
-# be re-creatable otherwise you will not be able to decrypt the encrypted object.
-
 # DES keys must either be 56 or 48 bits
+# Usually a hashed version of a password? 
+# Must be re-creatable otherwise to decrypt the encrypted object.
+CORE_KEY = bin(random.getrandbits(56)[2:])
 
-# 3. How to generate sub keys for each permutation? 
+# A parity bit is a bit added to the end of a string of binary code 
+# to indicate whether the number of bits in the string with the value one is 
+# even or odd. Parity bits are used as the simplest form of error detecting code.
+PARITY = 0 if CORE_KEY.count('1') % 2 == 0 else 1
+
+KEY = CORE_KEY + PARITY
+
+# How to generate sub keys for each permutation? 
 
 # In cryptography, the so-called product ciphers are a certain kind of ciphers, where the (de-)ciphering of data is done in "rounds". 
-# The general setup of each round is the same, except for some hard-coded parameters and a part of the cipher key, called a subkey. 
 # A key schedule is an algorithm that, given the key, calculates the subkeys for these rounds.
 
 # DES uses a key schedule where the 56 bit key is divided into two 28-bit halves; each half is thereafter treated separately. 
