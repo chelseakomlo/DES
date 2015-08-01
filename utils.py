@@ -32,18 +32,16 @@ def gen_subkeys():
   left = CORE_KEY[0:(len(CORE_KEY)/2)]
   right = CORE_KEY[(len(CORE_KEY)/2) len(CORE_KEY)]
 
+# The two 28-bit quantities are then subjected to successive circular left shifts 
+# of different sizes before the subkey for each round is determined from them. 
+# These circular left shifts, one of which is applied before the first subkey is taken, 
+# are in order of the following sizes:
+
+#  1 1 2 2 2 2 2 2 1 2 2 2 2 2 2 1
+
   for i in range(16):
-    # assuming all that is needed is shifting....
-    # probably left and right are separated for which reason? 
     subkeys[i] = lshift(left) + lshift(right)
 
-# circular left shifts
-# In combinatorial mathematics, a circular shift is the operation of rearranging the 
-# entries in a tuple, either by moving the final entry to the first position, while 
-# shifting all other entries to the next position, or by performing the inverse operation.
-
-# Bits at the end of the sequence are shifted to the beginning (circular)
-# In left rotation, the bits that fall off at left end are put back at right end.
 def lshift(block):
   last = block.pop()
   block.insert(0, last)
