@@ -26,5 +26,7 @@ The purpose of this kata is to implement the standard, and then break DES.
 The Feistel structure has the advantage that encryption and decryption operations are very similar, even identical in some cases, requiring only a reversal of the key schedule. 
 
 source1: https://en.wikipedia.org/wiki/Data_Encryption_Standard
+<br>
 source2: http://www.networksorcery.com/enp/rfc/rfc2419.txt
+<br>
 source3: http://csrc.nist.gov/publications/fips/fips46-3/fips46-3.pdf
