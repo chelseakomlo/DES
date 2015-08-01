@@ -1,9 +1,5 @@
 import random
 
-# Initial Permutation (IP)
-# The Initial Permuation (IP) is a description of how a byte wide interface is connected 
-# to a 64 bit block comprised of two 32 bit blocks (L and R). 
-
 IP = [ 57, 49, 41, 33, 25, 17, 9, 1,
       59, 51, 43, 35, 27, 19, 11, 3,
       61, 53, 45, 37, 29, 21, 13, 5,
@@ -24,24 +20,25 @@ FP = [ 39,  7, 47, 15, 55, 23, 63, 31,
      32,  0, 40,  8, 48, 16, 56, 24
      ]
 
-# DES keys must either be 56 or 48 bits
-# Usually a hashed version of a password? 
-# Must be re-creatable otherwise to decrypt the encrypted object.
 CORE_KEY = bin(random.getrandbits(56)[2:])
 
-# A parity bit is a bit added to the end of a string of binary code 
-# to indicate whether the number of bits in the string with the value one is 
-# even or odd. Parity bits are used as the simplest form of error detecting code.
 PARITY = 0 if CORE_KEY.count('1') % 2 == 0 else 1
 
 KEY = CORE_KEY + PARITY
 
-# How to generate sub keys for each permutation? 
+def gen_subkeys():
+  # this method will return a list of 16 subkeys from the initial key
+  subkeys = []
+  
+  # need the key split into left and right sections. 
+  left = CORE_KEY[0:(len(CORE_KEY)/2)]
+  right = CORE_KEY[(len(CORE_KEY)/2) len(CORE_KEY)]
 
-# In cryptography, the so-called product ciphers are a certain kind of ciphers, where the (de-)ciphering of data is done in "rounds". 
-# A key schedule is an algorithm that, given the key, calculates the subkeys for these rounds.
+  # circular left shifts
+  for i in range(16):
+    subkeys[1] = shift(left, right) 
 
-# DES uses a key schedule where the 56 bit key is divided into two 28-bit halves; each half is thereafter treated separately. 
+
 # In successive rounds, both halves are rotated left by one or two bits (specified for each round), and then 48 subkey bits are 
 # selected by Permuted Choice 2 (PC-2) — 24 bits from the left half, and 24 from the right. The rotations mean that a different 
 # set of bits is used in each subkey; each bit is used in approximately 14 out of the 16 subkeys.
