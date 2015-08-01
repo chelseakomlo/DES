@@ -27,18 +27,26 @@ PARITY = 0 if CORE_KEY.count('1') % 2 == 0 else 1
 KEY = CORE_KEY + PARITY
 
 def gen_subkeys():
-  # this method will return a list of 16 subkeys from the initial key
   subkeys = []
   
-  # need the key split into left and right sections. 
   left = CORE_KEY[0:(len(CORE_KEY)/2)]
   right = CORE_KEY[(len(CORE_KEY)/2) len(CORE_KEY)]
 
-  # circular left shifts
   for i in range(16):
-    subkeys[1] = shift(left, right) 
+    # assuming all that is needed is shifting....
+    # probably left and right are separated for which reason? 
+    subkeys[i] = lshift(left) + lshift(right)
+
+# circular left shifts
+# In combinatorial mathematics, a circular shift is the operation of rearranging the 
+# entries in a tuple, either by moving the final entry to the first position, while 
+# shifting all other entries to the next position, or by performing the inverse operation.
+
+# Bits at the end of the sequence are shifted to the beginning (circular)
+# In left rotation, the bits that fall off at left end are put back at right end.
+def lshift(block):
+  last = block.pop()
+  block.insert(0, last)
+  
 
 
-# In successive rounds, both halves are rotated left by one or two bits (specified for each round), and then 48 subkey bits are 
-# selected by Permuted Choice 2 (PC-2) — 24 bits from the left half, and 24 from the right. The rotations mean that a different 
-# set of bits is used in each subkey; each bit is used in approximately 14 out of the 16 subkeys.
