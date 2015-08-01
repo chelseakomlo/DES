@@ -32,11 +32,12 @@ PC1 = [ 56, 48, 40, 32, 24, 16, 8,
 
 ROTATION_SCHEDULE = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
 
-CORE_KEY = bin(random.getrandbits(56)[2:])
+def build_key():
+  key = bin(random.getrandbits(56)[2:])
+  parity = 0 if CORE_KEY.count('1') % 2 == 0 else 1
+  return key + parity
 
-PARITY = 0 if CORE_KEY.count('1') % 2 == 0 else 1
-
-KEY = CORE_KEY + PARITY
+KEY = build_key()
 
 def gen_subkeys():
   subkeys = []
