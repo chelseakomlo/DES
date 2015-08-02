@@ -32,17 +32,28 @@ PC1 = [ 56, 48, 40, 32, 24, 16, 8,
 
 ROTATION_SCHEDULE = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
 
+# DES operates on the 64-bit blocks using key sizes of 56- bits. The keys are actually stored as being 64 bits long, but every 8th bit in the key is not used (i.e. bits numbered 8, 16, 24, 32, 40, 48, 56, and 64). 
+
 def build_key():
-  key = bin(random.getrandbits(56)[2:])
-  parity = 0 if CORE_KEY.count('1') % 2 == 0 else 1
-  return key + parity
+  hex_k = "FFFFFFFFFFFFFC"
+  k = bin(int(hex_k, 16))[2:]
+  return _build(k)
+
+def _build(key):
+  final_key = ""
+  while len(key) != 0:
+    block = key[0:7]
+    parity = 0 if (block.count('1') % 2 == 0) else 1
+    final_key += block + str(parity)
+    key = key[7:]
+  return final_key
 
 KEY = build_key()
 
 def gen_subkeys():
   subkeys = []
   left = KEY[0:(len(CORE_KEY)/2)]
-  right = KEY[(len(CORE_KEY)/2) len(CORE_KEY)]
+  right = KEY[(len(CORE_KEY)/2):len(CORE_KEY)]
 
   for i in range(16):
     rotation = ROTATION_SCHEDULE[i]
@@ -58,3 +69,4 @@ def lshift(block, rotation=1):
 def permutate(block, interface):
   return list(map(lambda x: block[x], interface))
 
+print KEY
