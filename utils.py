@@ -43,6 +43,7 @@ PC2 = [
 
 ROTATION_SCHEDULE = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
 
+# The key is stored as 8 bytes, each with odd parity.
 def build_key():
   hex_k = "FFFFFFFFFFFFFC"
   k = bin(int(hex_k, 16))[2:]
@@ -65,7 +66,7 @@ def gen_subkeys(key):
   for i in range(0, 16):
     rotation = ROTATION_SCHEDULE[i]
     subkey = lshift(left, rotation) + lshift(right, rotation)
-    subkeys[i] = permutate(subkey, PC2) 
+    subkeys[i+1] = permutate(subkey, PC2) 
   return subkeys
 
 def lshift(block, rotation=1):
