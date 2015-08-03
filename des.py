@@ -4,24 +4,20 @@ from utils import *
 class DES():
 
   def encrypt(message):
-    # There is an initial permutation IP of the 64 bits of the message data M. 
     message = permutate(message, IP)
 
-    # Next divide the permuted block IP into a left half L0 of 32 bits, and a right half R0 of 32 bits.
     right, left = split(message)
 
-    # We now proceed through 16 iterations, for 1<=n<=16, using a function f which operates on two blocks--a data block of 32 bits and a key Kn of 48 bits--to produce a block of 32 bits.
     for i in range(0, 16):
       left_post = right
-      right_post - left + f(right, subkeys[i]
+      right_post = left + f(Block(right), subkeys[i]
       message = left + right
-    
     return message
 
   def decrypt(message):
+    message = permutate(message, FP)
     pass
 
-# accepts a block of 64 bits
   def permutate(block, interface):
     return list(map(lambda x: block[x], interface))
 
@@ -32,8 +28,35 @@ class DES():
   def xor(block, interface):
     pass
 
-# To calculate f, we first expand each block Rn-1 from 32 bits to 48 bits. This is done by using a selection table that repeats some of the bits in Rn-1. 
-# Next in the f calculation, we XOR the output E(Rn-1) with the key Kn
-# To this point we have expanded Rn-1 from 32 bits to 48 bits, using the selection table, and XORed the result with the key Kn . We now have 48 bits, or eight groups of six bits. We now do something strange with each group of six bits: we use them as addresses in tables called "S boxes"
-  def f(block):
+  # The F-function operates on half a block (32 bits) at a time and consists of four stages
+  # 1. Expand each block from 32 bits to 48 bits
+  # 2. XOR the output with key
+  # 3. Use something to do with S box substitution
+  # 4. Permutate according to P-Box
+  def f(self, block, subkey):
+    block = block.expand()
+                 .mix(subkey)
+                 .substitute()
+                 .permutate()
+
+class Block():
+  
+  def __init__(self, message):
+    self.message = message
+
+  def expand(self):
+    # The 32-bit half-block is expanded to 48 bits using the expansion permutation by duplicating half of the bits. 
+    # The output consists of eight 6-bit (8 * 6 = 48 bits) pieces, each containing a copy of 4 corresponding input bits, plus a copy of the immediately adjacent bit from each of the input pieces to either side.
+    pass
+
+  def mix(self, subkey):
+    # the result is combined with a subkey using an XOR operation. 16 48-bit subkeys — one for each round — are derived from the main key using the key schedule.
+    pass
+
+  def substitute(self):
+    # something to do with s-box subsitution
+    pass
+
+  def permutate(self):
+  # the 32 outputs from the S-boxes are rearranged according to a fixed permutation, the P-box. This is designed so that, after permutation, each S-box's output bits are spread across 4 different S boxes in the next round.
     pass
