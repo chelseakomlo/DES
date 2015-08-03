@@ -30,16 +30,25 @@ PC1 = [ 56, 48, 40, 32, 24, 16, 8,
       20, 12, 4, 27, 19, 11, 3
     ]
 
-ROTATION_SCHEDULE = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
+PC2 = [                                                                                       
+    13, 16, 10, 23, 0, 4,                                                                      
+    2, 27, 14, 5, 20, 9,                                                                       
+    22, 18, 11, 3, 25, 7,                                                                      
+    15, 6, 26, 19, 12, 1,                                                                      
+    40, 51, 30, 36, 46, 54,                                                                      
+    29, 39, 50, 44, 32, 47,                                                                      
+    43, 48, 38, 55, 33, 52,                                                                      
+    45, 41, 49, 35, 28, 31                                                                       
+    ]
 
-# DES operates on the 64-bit blocks using key sizes of 56- bits. The keys are actually stored as being 64 bits long, but every 8th bit in the key is not used (i.e. bits numbered 8, 16, 24, 32, 40, 48, 56, and 64). 
+ROTATION_SCHEDULE = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
 
 def build_key():
   hex_k = "FFFFFFFFFFFFFC"
   k = bin(int(hex_k, 16))[2:]
-  return _build(k)
+  return _with_parity(k)
 
-def _build(key):
+def _with_parity(key):
   final_key = ""
   while len(key) != 0:
     block = key[0:7]
@@ -48,25 +57,26 @@ def _build(key):
     key = key[7:]
   return final_key
 
-KEY = build_key()
+def gen_subkeys(key):
+  subkeys = {}
+  left = key[0:(len(key)/2)]
+  right = key[(len(key)/2):len(KEY)]
 
-def gen_subkeys():
-  subkeys = []
-  left = KEY[0:(len(CORE_KEY)/2)]
-  right = KEY[(len(CORE_KEY)/2):len(CORE_KEY)]
-
-  for i in range(16):
+  for i in range(0, 16):
     rotation = ROTATION_SCHEDULE[i]
-    subkeys[i] = lshift(left, rotation) + lshift(right, rotation)
+    subkey = lshift(left, rotation) + lshift(right, rotation)
+    subkeys[i] = permutate(subkey, PC2) 
   return subkeys
 
 def lshift(block, rotation=1):
   for i in range(rotation):
-    last = block.pop()
-    block.insert(0, last)
-  return permutate(block, PC1)
+    last = block[-1]
+    block = last + block[:-1]
+  return block
   
 def permutate(block, interface):
   return list(map(lambda x: block[x], interface))
-
-print KEY
+ 
+KEY = build_key()
+key = "".join(permutate(KEY, PC1))
+gen_subkeys(key)
