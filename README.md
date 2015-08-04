@@ -32,6 +32,8 @@ source2: http://www.networksorcery.com/enp/rfc/rfc2419.txt
 source3: http://csrc.nist.gov/publications/fips/fips46-3/fips46-3.pdf
 <br>
 source4: http://page.math.tu-berlin.de/~kant/teaching/hess/krypto-ws2006/des.htm
+<br>
+source5: https://en.wikipedia.org/wiki/S-box
 
 TODO: 
   - expand to accept an entire message rather than a block of 64 bits

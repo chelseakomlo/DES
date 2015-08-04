@@ -1,6 +1,5 @@
 from utils import *
 
-# The Feistel structure has the advantage that encryption and decryption operations are very similar, even identical in some cases, requiring only a reversal of the key schedule. 
 class DES():
 
   def encrypt(message):
@@ -15,6 +14,7 @@ class DES():
     return message
 
   def decrypt(message):
+    # similar to encryption, requires only a reversal of the key schedule. 
     message = permutate(message, FP)
     pass
 
@@ -35,7 +35,7 @@ class DES():
   # 4. Permutate according to P-Box
   def f(self, block, subkey):
     block = block.expand()
-                 .mix(subkey)
+                 .xor(subkey)
                  .substitute()
                  .permutate()
 
@@ -45,17 +45,27 @@ class Block():
     self.message = message
 
   def expand(self):
-    # The 32-bit half-block is expanded to 48 bits using the expansion permutation by duplicating half of the bits. 
-    # The output consists of eight 6-bit (8 * 6 = 48 bits) pieces, each containing a copy of 4 corresponding input bits, plus a copy of the immediately adjacent bit from each of the input pieces to either side.
-    pass
+    return permutate(self.message, EXPANSION)
 
-  def mix(self, subkey):
-    # the result is combined with a subkey using an XOR operation. 16 48-bit subkeys — one for each round — are derived from the main key using the key schedule.
-    pass
+  def xor(self, subkey):
+    return list(map(lambda x, y x ^ y, self.message, subkey)) 
 
   def substitute(self):
-    # something to do with s-box subsitution
-    pass
+    chunks = [ self.message[x:x+6] for x in xrange(0, len(self.message), 6) ]
+
+    # 2. blocks are subjected to a unique substitution function yielding a 4-bit block as output. 
+      # a.  This is done by taking the first and last bits of the block to
+      #     represent a 2-digit binary number (i) in the range of 0 to 3. 
+      # b. The middle 4 of the block represent a 4-digit binary number in the range of 0 to 15. 
+      # c.  The unique substitution number to use is the one in the ith row and jth column
+      #     which is in the range of 0 to 15 and is represented by a 4-bit block.
+   message = ""
+   for i in range(0, 7):
+    row = chunk[0] + chunk[5] 
+    column = chunk[1:4]
+    element = SBOXES[I][row][column]
+    message += element
+   return message
 
   def permutate(self):
   # the 32 outputs from the S-boxes are rearranged according to a fixed permutation, the P-box. This is designed so that, after permutation, each S-box's output bits are spread across 4 different S boxes in the next round.
