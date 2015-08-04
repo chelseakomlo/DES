@@ -2,42 +2,37 @@ from utils import *
 
 class DES():
 
-  def encrypt(message):
-    message = permutate(message, IP)
+  def encrypt(self, m):
+    message = permutate(m, IP)
 
-    right, left = split(message)
+    right, left = self.split(message)
 
+    encrypted_message = ""
     for i in range(0, 16):
-      left_post = right
-      right_post = left + f(Block(right), subkeys[i]
-      message = left + right
-    return message
+      left_post = "".join(right)
+      right_post = "".join(left) + self.f(Block(right), subkeys[i+1])
+      encrypted_message += left_post + right_post 
+    return encrypted_message
 
-  def decrypt(message):
+  def decrypt(self, message):
     # similar to encryption, requires only a reversal of the key schedule. 
     message = permutate(message, FP)
     pass
 
-  def permutate(block, interface):
-    return list(map(lambda x: block[x], interface))
-
-  def split(block):
+  def split(self, block):
     mid = len(block) / 2
-    return (block[0:mid], block[mid:len(block))
+    return (block[0:mid], block[mid:len(block)])
 
-  def xor(block, interface):
+  def xor(self, block, interface):
     pass
 
-  # The F-function operates on half a block (32 bits) at a time and consists of four stages
-  # 1. Expand each block from 32 bits to 48 bits
-  # 2. XOR the output with key
-  # 3. Use something to do with S box substitution
-  # 4. Permutate according to P-Box
   def f(self, block, subkey):
-    block = block.expand()
+    block = ( block.expand()
                  .xor(subkey)
                  .substitute()
                  .permutate()
+            )
+    return block.message
 
 class Block():
   
@@ -45,28 +40,39 @@ class Block():
     self.message = message
 
   def expand(self):
-    return permutate(self.message, EXPANSION)
+    self.message = permutate(self.message, EXPANSION)
+    return self
 
   def xor(self, subkey):
-    return list(map(lambda x, y x ^ y, self.message, subkey)) 
+    message = list(map(lambda x, y: int(x) ^ int(y), self.message, subkey)) 
+    self.message = "".join(str(x) for x in message)
+    return self
 
   def substitute(self):
-    chunks = [ self.message[x:x+6] for x in xrange(0, len(self.message), 6) ]
+    chunks = []
+    for x in range(0, len(self.message), 6):
+      chunk = self.message[x:x+6]
+      chunks.append(chunk)
 
-    # 2. blocks are subjected to a unique substitution function yielding a 4-bit block as output. 
-      # a.  This is done by taking the first and last bits of the block to
-      #     represent a 2-digit binary number (i) in the range of 0 to 3. 
-      # b. The middle 4 of the block represent a 4-digit binary number in the range of 0 to 15. 
-      # c.  The unique substitution number to use is the one in the ith row and jth column
-      #     which is in the range of 0 to 15 and is represented by a 4-bit block.
-   message = ""
-   for i in range(0, 7):
-    row = chunk[0] + chunk[5] 
-    column = chunk[1:4]
-    element = SBOXES[I][row][column]
-    message += element
-   return message
+    m = ""
+    for i in range(0, 7):
+      chunk = chunks[i]
+      # The first and last bits of B represent in base 2 a number in the decimal range 0 to 3
+      row = int((chunk[0] + chunk[5]), 2)
+      # The middle 4 bits of B represent in base 2 a number in the decimal range 0 to 15 
+      column = int(chunk[1:4], 2)
+      element = SBOXES[i][row][column]
+      m += str(element)
+    self.message = m
+    return self
 
   def permutate(self):
-  # the 32 outputs from the S-boxes are rearranged according to a fixed permutation, the P-box. This is designed so that, after permutation, each S-box's output bits are spread across 4 different S boxes in the next round.
-    pass
+  # the 32 outputs from the S-boxes are rearranged according to a fixed permutation, the P-box. 
+  # This is designed so that, after permutation, each S-box's output bits are spread across 4 different S boxes in the next round.
+    return self
+
+subkeys = build_key_and_subkeys()
+import random
+#message = str(random.getrandbits(64))
+message = " 0000000100100011010001010110011110001001101010111100110111101111"
+print DES().encrypt(message)
