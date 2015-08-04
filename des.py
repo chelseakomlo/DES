@@ -4,7 +4,6 @@ class DES():
 
   def encrypt(self, m):
     message = permutate(m, IP)
-
     right, left = self.split(message)
 
     encrypted_message = ""
@@ -57,9 +56,7 @@ class Block():
     m = ""
     for i in range(0, 7):
       chunk = chunks[i]
-      # The first and last bits of B represent in base 2 a number in the decimal range 0 to 3
       row = int((chunk[0] + chunk[5]), 2)
-      # The middle 4 bits of B represent in base 2 a number in the decimal range 0 to 15 
       column = int(chunk[1:4], 2)
       element = SBOXES[i][row][column]
       m += str(element)
@@ -72,7 +69,5 @@ class Block():
     return self
 
 subkeys = build_key_and_subkeys()
-import random
-#message = str(random.getrandbits(64))
 message = " 0000000100100011010001010110011110001001101010111100110111101111"
 print DES().encrypt(message)
