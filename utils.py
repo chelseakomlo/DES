@@ -89,13 +89,21 @@ SBOXES = {
 
 ROTATION_SCHEDULE = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
 
-# The key is stored as 8 bytes, each with odd parity.
+P = [ 16, 7, 20, 21,
+      29, 12, 28, 17,
+      1, 15, 23, 26,
+      5, 18, 31, 10,
+      2 , 8, 24, 14,
+      32, 27, 3, 9,
+      19, 13, 30, 6,
+      22, 11, 4, 25 ]
+
 def build_key():
   hex_k = "FFFFFFFFFFFFFC"
   k = bin(int(hex_k, 16))[2:]
-  return _with_parity(k)
+  return __with_parity(k)
 
-def _with_parity(key):
+def __with_parity(key):
   final_key = ""
   while len(key) != 0:
     block = key[0:7]

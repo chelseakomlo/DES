@@ -54,18 +54,17 @@ class Block():
       chunks.append(chunk)
 
     m = ""
-    for i in range(0, 7):
+    for i in range(0, 8):
       chunk = chunks[i]
       row = int((chunk[0] + chunk[5]), 2)
-      column = int(chunk[1:4], 2)
+      column = int(chunk[1:5], 2)
       element = SBOXES[i][row][column]
       m += str(element)
-    self.message = m
+    self.message = bin(int(m))[2:]
     return self
 
   def permutate(self):
-  # the 32 outputs from the S-boxes are rearranged according to a fixed permutation, the P-box. 
-  # This is designed so that, after permutation, each S-box's output bits are spread across 4 different S boxes in the next round.
+    self.message = "".join(str(x) for x in permutate(self.message, P))
     return self
 
 subkeys = build_key_and_subkeys()
