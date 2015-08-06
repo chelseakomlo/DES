@@ -24,3 +24,18 @@ class TestUtils():
     assert_equals([1, 2], left)
     assert_equals([3, 4], right)
 
+  def test_xor_no_change(self):
+    block1 = "01"
+    block2 = "00"
+    expected = "01"
+
+    actual = xor(block1, block2)
+    assert_equals(expected, actual)
+
+  def test_xor_with_change(self):
+    block1 = "01"
+    block2 = "10"
+    expected = "11"
+
+    actual = xor(block1, block2)
+    assert_equals(expected, actual)

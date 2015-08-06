@@ -1,3 +1,5 @@
+def permutate_ip(block, iterator):
+  return "".join(str(x) for x in [block[x-1] for x in iterator])
 
 def permutate(block, iterator):
   return "".join(str(x) for x in [block[x] for x in iterator])
@@ -12,3 +14,7 @@ def lshift(block, schedule):
     first = block[0]
     next_block = block[1:] + first
   return next_block
+
+def xor(block1, block2):
+  result = [ int(block1[x]) ^ int(block2[x]) for x in range(len(block1)) ]
+  return "".join(str(x) for x in result)
