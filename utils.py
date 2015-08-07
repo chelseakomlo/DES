@@ -1,4 +1,4 @@
-def permutate_ip(block, iterator):
+def permutate_one_index(block, iterator):
   return "".join(str(x) for x in [block[x-1] for x in iterator])
 
 def permutate(block, iterator):
