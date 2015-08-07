@@ -18,3 +18,8 @@ def lshift(block, schedule):
 def xor(block1, block2):
   result = [ int(block1[x]) ^ int(block2[x]) for x in range(len(block1)) ]
   return "".join(str(x) for x in result)
+
+def binary_add(a, b):
+  result = bin(int(a, 2) + int(b, 2))
+  return str(result)[2:]
+

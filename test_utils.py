@@ -39,3 +39,10 @@ class TestUtils():
 
     actual = xor(block1, block2)
     assert_equals(expected, actual)
+
+  def test_binary_add(self):
+    a = "01"
+    b = "01"
+
+    result = binary_add(a, b)
+    assert_equals('10', result)
