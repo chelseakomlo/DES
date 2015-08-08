@@ -1,5 +1,6 @@
 from constants import *
 from utils import *
+from message_factory import MessageFactory
 
 class DES():
 
@@ -40,26 +41,13 @@ class DES():
     return self.encode(next_left, next_right, counter+1)
 
   def feistel(self, right, n):
-    r = permutate(right, EXPANSION)
-    r = xor(r, self.subkeys[n])
-    r = self.substitute(r)
-    p = permutate_one_index(r, P) 
-    return p
-
-  def substitute(self, message):
-    chunks = [message[x:x+6] for x in range(0, len(message), 6)]
-
-    m = ""
-    for i in range(8):
-      m += self.sbox(chunks[i], i)
-    return m
-
-  def sbox(self, block, n):
-    row = int((block[0] + block[5]), 2)
-    column = int(block[1:5], 2)
-    m = SBOXES[n][row][column]
-    return_val = str(bin(int(m))[2:])
-    return return_val.zfill(4)
-
+    message = ( MessageFactory(right)
+                  .expand()
+                  .xor(self.subkeys[n])
+                  .substitute()
+                  .p()
+                  .get_message()
+              )
+    return message 
 
    

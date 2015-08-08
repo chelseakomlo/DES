@@ -68,22 +68,6 @@ class TestDES():
     result = des.feistel(right_zero, 0) 
     assert_equals(expected, result)
   
-  def test_substitute(self):
-    r_zero = "011000010001011110111010100001100110010100100111"
-    des = DES(self.key)
-
-    expected_r_one = "01011100100000101011010110010111"
-    actual_r_one = des.substitute(r_zero)
-    assert_equals(expected_r_one, actual_r_one)
-
-  def test_sbox(self):
-    block = "011011"
-    expected = "0101"
-
-    des = DES(self.key)
-    actual = des.sbox(block, 0)
-    assert_equals(expected, actual)
-
 
 
 
