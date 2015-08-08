@@ -7,7 +7,8 @@ class TestDES():
   def setUp(self):
     self.key = "0001001100110100010101110111100110011011101111001101111111110001"
 
-  def test_permutates_key(self):
+  # move to utils test
+  def _test_permutates_key(self):
     given_key = "0001001100110100010101110111100110011011101111001101111111110001"
     expected = "11110000110011001010101011110101010101100110011110001111"
     assert_equals(expected, DES(given_key).key)
@@ -15,18 +16,14 @@ class TestDES():
   def test_build_first_subkey(self):
     des = DES(self.key)
     expected = "000110110000001011101111111111000111000001110010"
-    initial_key = permutate(self.key, PC1)
-    subkeys = des.gen_subkeys()
 
-    assert_equals(expected, subkeys[0])
+    assert_equals(expected, des.subkeys[0])
 
   def test_build_second_subkey(self):
     des = DES(self.key)
-    prev_key = "000110110000001011101111111111000111000001110010"
     expected = "011110011010111011011001110110111100100111100101"
-    subkeys = des.gen_subkeys()
 
-    assert_equals(expected, subkeys[1])
+    assert_equals(expected, des.subkeys[1])
 
   def test_builds_unpermutated_keys(self):
     des = DES(self.key)
@@ -39,8 +36,7 @@ class TestDES():
   def test_generate_unpermutated_subkeys_for_key(self):
     des = DES(self.key)
 
-    subkeys = des.build(self.key)
-    assert_equals(16, len(subkeys))
+    assert_equals(16, len(des.subkeys))
  
   def _test_encode_full_message(self):
     test_message = "0000000100100011010001010110011110001001101010111100110111101111"
@@ -50,7 +46,7 @@ class TestDES():
     result = des.encrypt(test_message)
     assert_equals(expected, result)
 
-  def _test_encode_message(self):
+  def test_encode_message(self):
     left_zero = "11001100000000001100110011111111"
     right_zero = "11110000101010101111000010101010"
     expected = "1111000010101010111100001010101011101111010010110111011010111010"
