@@ -42,7 +42,7 @@ class TestDES():
     subkeys = des.build(self.key)
     assert_equals(16, len(subkeys))
  
-  def test_encode_message(self):
+  def _test_encode_full_message(self):
     test_message = "0000000100100011010001010110011110001001101010111100110111101111"
     expected = "1000010111101000000100110101010000001111000010101011010000000101"
 
@@ -50,14 +50,22 @@ class TestDES():
     result = des.encrypt(test_message)
     assert_equals(expected, result)
 
-  def test_feistel(self):
+  def _test_encode_message(self):
     left_zero = "11001100000000001100110011111111"
+    right_zero = "11110000101010101111000010101010"
+    expected = "1111000010101010111100001010101011101111010010110111011010111010"
+
+    des = DES(self.key)
+    message = des.encode(left_zero, right_zero)
+    assert_equals(expected, message)
+
+  def test_feistel(self):
     right_zero = "11110000101010101111000010101010"
 
     expected = "00100011010010101010100110111011"
 
     des = DES(self.key)
-    result = des.feistel(left_zero, right_zero, 0) 
+    result = des.feistel(right_zero, 0) 
     assert_equals(expected, result)
   
   def test_substitute(self):

@@ -18,7 +18,6 @@ class DES():
     subkeys[length] = next_key 
 
     if length == 15: return subkeys
-
     length += 1
     return self.build(next_key, length, subkeys)
 
@@ -28,15 +27,19 @@ class DES():
     return lshift(left, schedule) + lshift(right, schedule)
 
   def encrypt(self, message):
-    m = permutate_ip(message, IP)
+    m = permutate_one_index(message, IP)
     left, right = split(m)
-    for i in range(0, 15):
-      left = prev_right
-      right = prev_left + feistel(prev_right, key)
-    message = right + left
-    return permutate_ip(message, IP_INV)
+    message = self.encode(left, right)
+    return permutate_one_index(message, IP_INV)
 
-  def feistel(self, left, right, n):
+  def encode(self, left, right, counter=0):
+    next_left = right
+    next_right = binary_add(left, self.feistel(right, counter))
+    
+    if counter == 0: return next_left + next_right
+    return self.encode(next_left, next_right, counter+1)
+
+  def feistel(self, right, n):
     r = permutate(right, EXPANSION)
     r = xor(r, self.subkeys[n])
     r = self.substitute(r)
@@ -44,15 +47,11 @@ class DES():
     return p
 
   def substitute(self, message):
-    chunks = []
-    for x in range(0, len(message), 6):
-      chunk = message[x:x+6]
-      chunks.append(chunk)
+    chunks = [message[x:x+6] for x in range(0, len(message), 6)]
 
     m = ""
     for i in range(8):
-      chunk = chunks[i]
-      m += self.sbox(chunk, i)
+      m += self.sbox(chunks[i], i)
     return m
 
   def sbox(self, block, n):
