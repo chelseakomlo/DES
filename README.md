@@ -37,3 +37,5 @@ source5: https://en.wikipedia.org/wiki/S-box
 
 TODO: 
   - expand to accept an entire message rather than a block of 64 bits
+  - accept arguments via command line
+  - accept hex or string messages
