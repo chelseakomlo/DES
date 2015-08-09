@@ -9,17 +9,15 @@ def split(block):
   return (block[:mid], block[mid:])
 
 def lshift(block, schedule):
-  next_block = ""
-  for i in range(0, schedule): 
-    first = block[0]
-    next_block = block[1:] + first
-  return next_block
+  if schedule == 0: return block
+  first = block[0]
+  block = block[1:] + first
+  return lshift(block, schedule-1)
 
 def xor(block1, block2):
   result = [ int(block1[x]) ^ int(block2[x]) for x in range(len(block1)) ]
   return "".join(str(x) for x in result)
 
-def binary_add(a, b):
-  result = bin(int(a, 2) + int(b, 2))
-  return str(result)[2:]
+def hex_to_binary(block):
+  pass
 

@@ -17,6 +17,12 @@ class TestUtils():
     result = lshift(block, 1)
     assert_equals("2341", result)
 
+  def test_lshift_shifts_two(self):
+    block = "1234"
+
+    result = lshift(block, 2)
+    assert_equals("3412", result)
+
   def test_split(self):
     block = [1, 2, 3, 4]
     left, right = split(block)
@@ -24,25 +30,5 @@ class TestUtils():
     assert_equals([1, 2], left)
     assert_equals([3, 4], right)
 
-  def test_xor_no_change(self):
-    block1 = "01"
-    block2 = "00"
-    expected = "01"
-
-    actual = xor(block1, block2)
-    assert_equals(expected, actual)
-
-  def test_xor_with_change(self):
-    block1 = "01"
-    block2 = "10"
-    expected = "11"
-
-    actual = xor(block1, block2)
-    assert_equals(expected, actual)
-
-  def test_binary_add(self):
-    a = "01"
-    b = "01"
-
-    result = binary_add(a, b)
-    assert_equals('10', result)
+  def test_hex_to_binary(self):
+    pass
