@@ -8,13 +8,13 @@ class DES():
     key = permutate(key, PC1) 
     self.subkeys = self.gen_subkeys(key)
 
-  def gen_subkeys(self, key, length=0, subkeys={}):
-    next_key = self.build_subkey(key, length)
-    subkeys[length] = permutate(next_key, PC2)
+  def gen_subkeys(self, key, counter=0, subkeys={}):
+    next_key = self.build_subkey(key, counter)
+    subkeys[counter] = permutate(next_key, PC2)
 
-    if length == 15: return subkeys
-    length += 1
-    return self.gen_subkeys(next_key, length, subkeys)
+    if counter == 15: return subkeys
+    counter += 1
+    return self.gen_subkeys(next_key, counter, subkeys)
 
   def build_subkey(self, prev_key, sequence):
     left, right = split(prev_key)
@@ -29,9 +29,9 @@ class DES():
 
   def encode(self, left, right, counter=0):
     next_left = right
-    next_right = binary_add(left, self.feistel(right, counter))
-    
-    if counter == 0: return next_left + next_right
+    next_right = xor(left, self.feistel(right, counter))
+
+    if counter == 15: return next_right + next_left
     return self.encode(next_left, next_right, counter+1)
 
   def feistel(self, right, n):

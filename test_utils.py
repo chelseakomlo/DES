@@ -30,5 +30,3 @@ class TestUtils():
     assert_equals([1, 2], left)
     assert_equals([3, 4], right)
 
-  def test_hex_to_binary(self):
-    pass

@@ -18,6 +18,3 @@ def xor(block1, block2):
   result = [ int(block1[x]) ^ int(block2[x]) for x in range(len(block1)) ]
   return "".join(str(x) for x in result)
 
-def hex_to_binary(block):
-  pass
-
